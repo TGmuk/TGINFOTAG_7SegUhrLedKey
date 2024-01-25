@@ -1,6 +1,4 @@
 #include "mbed.h"
-#include <string>
-
 
 #define Set_data_command 0b00100010
 #define Display_ON 0b11110001
@@ -31,7 +29,6 @@ uint8_t reverse(uint8_t b) {
 }
 
 
-
 void setDigit(int digitIndex, int number) {
     STB = 0;
     spi.write(Set_data_command);
@@ -53,11 +50,11 @@ void setLed(int index, bool on) {
     STB = 1;
 }
 
-uint8_t getButtons(){
+uint8_t getButtons() {
     uint8_t data = 0;
     STB = 0;
     spi.write(read_buttons);
-    for(int i=0; i<4;i++) {
+    for (int i = 0; i < 4; i++) {
         data |= spi.write(0xFF) >> i;
     }
     STB = 1;
@@ -103,7 +100,6 @@ void ledISR() {
     }
 
 }
-
 
 
 int main() {
