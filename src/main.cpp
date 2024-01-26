@@ -13,6 +13,11 @@ int dig[8] = {0b00000011, 0b01000011, 0b00100011, 0b01100011, 0b00010011, 0b0101
 int led[8] = {0b10000011, 0b11000011, 0b10100011, 0b11100011, 0b10010011, 0b11010011, 0b10110011, 0b11110011};
 
 
+InterruptIn start(PA_10);
+InterruptIn stop(PA_6);
+InterruptIn reset(PA_1);
+
+
 DigitalOut STB(PB_12);
 PortOut buttonOut(PortC, 0xFF);
 
@@ -101,6 +106,28 @@ void ledISR() {
 
 }
 
+void startTimer(){
+
+    ledTicker.attach(ledISR, 50ms);
+    displayTicker.attach(displayISR, 1ms);
+
+
+}
+
+void stopTimer(){
+    displayTicker.detach();
+    ledTicker.detach();
+
+}
+
+void resetTimer(){
+    millis = 0;
+    seconds = 0;
+    minutes = 0;
+    hours = 0;
+
+}
+
 
 int main() {
     DigitalInOut MOSI(PB_15);
@@ -115,6 +142,15 @@ int main() {
 
     ledTicker.attach(ledISR, 50ms);
     displayTicker.attach(displayISR, 1ms);
+
+    start.mode(PullDown);
+    start.rise(startTimer);
+
+    stop.mode(PullDown);
+    stop.rise(stopTimer);
+
+    reset.mode(PullDown);
+    reset.rise(resetTimer);
 
 
     while (true) {
@@ -135,7 +171,7 @@ int main() {
             setLed(i, (ledCounter >> i) & 1);
         }
 
-        buttonOut = getButtons();
+        // buttonOut = getButtons();
 
         STB = 1;
 
