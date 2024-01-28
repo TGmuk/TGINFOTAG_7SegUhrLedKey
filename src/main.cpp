@@ -171,7 +171,7 @@ int main() {
             setLed(i, (ledCounter >> i) & 1);
         }
 
-        // buttonOut = getButtons();
+        buttonOut = getButtons(); // PB_14 muss auch an DIO angeschlossen sein. Kann auskommentiert werden.
 
         STB = 1;
 
